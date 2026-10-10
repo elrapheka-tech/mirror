@@ -1,0 +1,33 @@
+{
+  "name": "mirror",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Self-hosted LiveKit-style SFU: Node.js control plane, C media core, room recording.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0",
+    "pnpm": ">=10"
+  },
+  "packageManager": "pnpm@10.10.0",
+  "scripts": {
+    "build:native": "cmake -S native/sfu-worker -B build/native -DCMAKE_BUILD_TYPE=Release && cmake --build build/native -j",
+    "test:native": "ctest --test-dir build/native --output-on-failure",
+    "dev": "node --env-file-if-exists=.env apps/signaling/src/main.ts",
+    "start": "node --env-file-if-exists=.env apps/signaling/src/main.ts",
+    "cleanup": "node --env-file-if-exists=.env apps/egress/src/cli.ts",
+    "test": "node --test \"packages/*/test/*.test.ts\" \"apps/*/test/*.test.ts\"",
+    "typecheck": "tsc -p tsconfig.json",
+    "e2e": "node scripts/e2e.ts",
+    "format": "prettier --write . && clang-format -i native/sfu-worker/src/*.c native/sfu-worker/src/*.h native/sfu-worker/tests/*.c",
+    "format:check": "prettier --check .",
+    "preinstall": "node scripts/only-pnpm.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "@types/ws": "^8.18.1",
+    "playwright": "^1.56.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
+  }
+}

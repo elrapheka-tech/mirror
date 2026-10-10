@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0d12" />
+    <title>Mirror Admin</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="admin-page">
+      <form id="admin" class="card">
+        <a class="logo" href="/" translate="no">
+          <span class="logo-mark" aria-hidden="true"
+            ><svg class="icon"><use href="/icons.svg#video" /></svg
+          ></span>
+          Mirror
+        </a>
+        <h1>Admin Settings</h1>
+        <div class="field" id="key-row">
+          <label for="key">Admin Key</label>
+          <div class="input-wrap">
+            <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#shield" /></svg>
+            <input id="key" class="input" type="password" autocomplete="off" spellcheck="false" />
+          </div>
+        </div>
+        <label class="switch">
+          <span class="switch-text">
+            <strong>Record New Rooms</strong>
+            <small>Rooms already running keep their current setting.</small>
+          </span>
+          <input id="recording" type="checkbox" role="switch" disabled />
+        </label>
+        <p id="status" class="hint" role="status"></p>
+        <p id="error" class="error" role="alert" tabindex="-1"></p>
+        <a class="card-link" href="/#server/settings">
+          <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#arrow-left" /></svg>
+          Back to Mirror
+        </a>
+      </form>
+    </main>
+    <script type="module" src="/admin.js"></script>
+  </body>
+</html>

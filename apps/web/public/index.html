@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0d12" />
+    <title>Mirror</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#join-form">Skip to Content</a>
+    <div id="home">
+      <header class="home-bar">
+        <a class="logo" href="/" translate="no">
+          <span class="logo-mark" aria-hidden="true"
+            ><svg class="icon"><use href="/icons.svg#video" /></svg
+          ></span>
+          Mirror
+        </a>
+        <div class="home-actions">
+          <span id="home-status" class="status-pill" data-state="checking" role="status">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="status-text">Checking server…</span>
+          </span>
+          <button
+            type="button"
+            id="open-server"
+            class="icon-btn"
+            aria-label="Server settings"
+            title="Server settings"
+            aria-haspopup="dialog"
+          >
+            <svg class="icon" aria-hidden="true"><use href="/icons.svg#settings" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="lobby">
+        <section id="preview-wrap" class="preview camera-off" aria-label="Camera preview">
+          <video id="preview" muted autoplay playsinline aria-hidden="true"></video>
+          <div class="avatar show" id="preview-avatar" aria-hidden="true"><span>?</span></div>
+          <span class="preview-name" id="preview-name" hidden></span>
+          <div class="preview-message" id="preview-message" hidden>
+            <svg class="icon lg" aria-hidden="true"><use href="/icons.svg#video-off" /></svg>
+            <p id="preview-text">Mirror needs your camera and microphone.</p>
+            <button type="button" id="preview-retry" class="btn btn-sm">
+              <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#refresh" /></svg>
+              Try Again
+            </button>
+          </div>
+          <div class="preview-controls">
+            <button
+              type="button"
+              id="preview-mic"
+              class="icon-btn control"
+              aria-pressed="true"
+              aria-label="Unmute microphone"
+              title="Unmute microphone"
+              disabled
+            >
+              <svg class="icon when-on" aria-hidden="true"><use href="/icons.svg#mic" /></svg>
+              <svg class="icon when-off" aria-hidden="true"><use href="/icons.svg#mic-off" /></svg>
+            </button>
+            <button
+              type="button"
+              id="preview-cam"
+              class="icon-btn control"
+              aria-pressed="true"
+              aria-label="Turn on camera"
+              title="Turn on camera"
+              disabled
+            >
+              <svg class="icon when-on" aria-hidden="true"><use href="/icons.svg#video" /></svg>
+              <svg class="icon when-off" aria-hidden="true">
+                <use href="/icons.svg#video-off" />
+              </svg>
+            </button>
+          </div>
+        </section>
+
+        <form id="join-form" class="join-card">
+          <h1>Ready to Join?</h1>
+          <p class="lede">Start a new room, or type the name of one that's already running.</p>
+          <div class="field">
+            <label for="join-name">Your Name</label>
+            <div class="input-wrap">
+              <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#user" /></svg>
+              <input
+                id="join-name"
+                class="input"
+                name="name"
+                required
+                maxlength="64"
+                autocomplete="name"
+                enterkeyhint="go"
+                placeholder="Ada Lovelace"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label for="join-room">Room</label>
+            <div class="input-row">
+              <div class="input-wrap">
+                <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#hash" /></svg>
+                <input
+                  id="join-room"
+                  class="input"
+                  name="room"
+                  required
+                  maxlength="48"
+                  pattern="[A-Za-z0-9_\-]{1,48}"
+                  title="Letters, numbers, dashes, and underscores"
+                  autocomplete="off"
+                  spellcheck="false"
+                  enterkeyhint="next"
+                  placeholder="team-standup"
+                />
+              </div>
+              <button type="button" id="create-room" class="btn" title="Make up a new room name">
+                <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#plus" /></svg>
+                New Room
+              </button>
+            </div>
+          </div>
+          <div class="field" id="api-key-row" hidden>
+            <label for="join-api-key">API Key</label>
+            <div class="input-wrap">
+              <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#key" /></svg>
+              <input
+                id="join-api-key"
+                class="input"
+                name="apiKey"
+                type="password"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+          </div>
+          <button type="submit" id="join-button" class="btn btn-primary btn-block">
+            <svg class="icon" aria-hidden="true"><use href="/icons.svg#video" /></svg>
+            <span id="join-label">Join Meeting</span>
+          </button>
+          <p id="join-error" class="error" role="alert" tabindex="-1"></p>
+        </form>
+      </main>
+
+      <dialog id="server-drawer" class="drawer" aria-labelledby="drawer-title">
+        <div class="drawer-body">
+          <header class="drawer-head">
+            <h2 id="drawer-title">
+              <svg class="icon" aria-hidden="true"><use href="/icons.svg#server" /></svg>
+              Server
+            </h2>
+            <button
+              type="button"
+              id="close-server"
+              class="icon-btn"
+              aria-label="Close"
+              title="Close"
+            >
+              <svg class="icon" aria-hidden="true"><use href="/icons.svg#x" /></svg>
+            </button>
+          </header>
+          <nav id="home-nav" class="segmented" role="tablist" aria-label="Server">
+            <button
+              type="button"
+              id="tab-dashboard"
+              role="tab"
+              aria-selected="true"
+              aria-controls="panel-dashboard"
+            >
+              <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#activity" /></svg>
+              Overview
+            </button>
+            <button
+              type="button"
+              id="tab-setup"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panel-setup"
+              tabindex="-1"
+            >
+              <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#check" /></svg>
+              Setup
+            </button>
+            <button
+              type="button"
+              id="tab-settings"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panel-settings"
+              tabindex="-1"
+            >
+              <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#settings" /></svg>
+              Settings
+            </button>
+          </nav>
+          <div class="drawer-content">
+            <section
+              id="panel-dashboard"
+              class="drawer-section"
+              role="tabpanel"
+              aria-labelledby="tab-dashboard"
+            >
+              <div class="stats" id="stats">
+                <p class="hint">Loading…</p>
+              </div>
+              <p id="stats-error" class="error" role="alert" tabindex="-1"></p>
+              <button type="button" id="refresh-stats" class="btn">
+                <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#refresh" /></svg>
+                Refresh
+              </button>
+            </section>
+
+            <section
+              id="panel-setup"
+              class="drawer-section"
+              role="tabpanel"
+              aria-labelledby="tab-setup"
+              hidden
+            >
+              <p class="lede">
+                What this server can do right now. Addresses and keys live in the environment file
+                and take effect after a restart.
+              </p>
+              <ul id="setup-checks" class="checks"></ul>
+            </section>
+
+            <section id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
+              <form id="settings-form" class="drawer-section">
+                <div class="settings-group">
+                  <h3>This Browser</h3>
+                  <div class="field">
+                    <label for="setting-name">Default Name</label>
+                    <div class="input-wrap">
+                      <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#user" /></svg>
+                      <input
+                        id="setting-name"
+                        class="input"
+                        name="displayName"
+                        maxlength="64"
+                        autocomplete="name"
+                        placeholder="Ada Lovelace"
+                      />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="setting-api-key">API Key</label>
+                    <div class="input-wrap">
+                      <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#key" /></svg>
+                      <input
+                        id="setting-api-key"
+                        class="input"
+                        type="password"
+                        autocomplete="off"
+                        spellcheck="false"
+                      />
+                    </div>
+                    <p class="hint">Only needed when the server was started with an API key.</p>
+                  </div>
+                </div>
+                <div class="settings-group">
+                  <h3>Recording</h3>
+                  <div class="field">
+                    <label for="setting-admin-key">Admin Key</label>
+                    <div class="input-wrap">
+                      <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#shield" /></svg>
+                      <input
+                        id="setting-admin-key"
+                        class="input"
+                        type="password"
+                        autocomplete="off"
+                        spellcheck="false"
+                      />
+                    </div>
+                  </div>
+                  <label class="switch">
+                    <span class="switch-text">
+                      <strong>Record New Rooms</strong>
+                      <small>Rooms already running keep their current setting.</small>
+                    </span>
+                    <input id="record-new" type="checkbox" role="switch" disabled />
+                  </label>
+                  <p id="settings-status" class="hint" role="status"></p>
+                </div>
+                <p id="settings-error" class="error" role="alert" tabindex="-1"></p>
+              </form>
+            </section>
+          </div>
+        </div>
+      </dialog>
+    </div>
+
+    <main id="call" hidden>
+      <header class="topbar">
+        <a class="logo-mark" href="/" aria-label="Mirror home" translate="no">
+          <svg class="icon" aria-hidden="true"><use href="/icons.svg#video" /></svg>
+        </a>
+        <div class="room-title">
+          <h1 id="room-name" translate="no"></h1>
+          <span id="recording" class="rec-pill" hidden
+            ><span class="rec-dot" aria-hidden="true"></span>Recording</span
+          >
+        </div>
+        <span class="spacer"></span>
+        <button type="button" id="copy-link" class="btn btn-sm" title="Copy invite link">
+          <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#link" /></svg>
+          <span class="copy-link-text">Copy Invite Link</span>
+        </button>
+      </header>
+
+      <div class="stage">
+        <div class="grid-wrap">
+          <section id="grid" aria-label="Video tiles"></section>
+          <div class="pager" id="pager" hidden>
+            <button
+              type="button"
+              id="prev-page"
+              class="icon-btn sm"
+              aria-label="Previous page"
+              title="Previous page"
+            >
+              <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#chevron-left" /></svg>
+            </button>
+            <span id="page-label">1 / 1</span>
+            <button
+              type="button"
+              id="next-page"
+              class="icon-btn sm"
+              aria-label="Next page"
+              title="Next page"
+            >
+              <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#chevron-right" /></svg>
+            </button>
+          </div>
+          <div class="self-wrap" id="self-wrap">
+            <video id="self" muted autoplay playsinline aria-label="Your camera"></video>
+            <div class="avatar" id="self-avatar" aria-hidden="true"><span></span></div>
+            <span class="hand-badge" id="self-hand" hidden aria-hidden="true">
+              <svg class="icon"><use href="/icons.svg#hand" /></svg>
+            </span>
+            <span class="reaction" id="self-reaction" hidden></span>
+            <span class="self-label" aria-hidden="true">You</span>
+          </div>
+        </div>
+        <aside id="side" class="side" aria-labelledby="people-title">
+          <div class="side-head">
+            <h2 id="people-title">People <span id="count" class="count"></span></h2>
+            <button
+              type="button"
+              id="close-people"
+              class="icon-btn sm"
+              aria-label="Close people"
+              title="Close"
+            >
+              <svg class="icon sm" aria-hidden="true"><use href="/icons.svg#x" /></svg>
+            </button>
+          </div>
+          <ul id="people"></ul>
+        </aside>
+      </div>
+
+      <div class="toasts">
+        <p id="notice" class="toast" role="status"></p>
+        <p id="toast" class="toast" role="status"></p>
+      </div>
+
+      <footer class="controls">
+        <div class="controls-group">
+          <button
+            type="button"
+            id="toggle-mic"
+            class="icon-btn control"
+            aria-pressed="false"
+            aria-label="Mute microphone"
+            title="Mute microphone"
+          >
+            <svg class="icon when-on" aria-hidden="true"><use href="/icons.svg#mic" /></svg>
+            <svg class="icon when-off" aria-hidden="true"><use href="/icons.svg#mic-off" /></svg>
+          </button>
+          <button
+            type="button"
+            id="toggle-cam"
+            class="icon-btn control"
+            aria-pressed="false"
+            aria-label="Turn off camera"
+            title="Turn off camera"
+          >
+            <svg class="icon when-on" aria-hidden="true"><use href="/icons.svg#video" /></svg>
+            <svg class="icon when-off" aria-hidden="true"><use href="/icons.svg#video-off" /></svg>
+          </button>
+          <button
+            type="button"
+            id="raise-hand"
+            class="icon-btn control accent-when-pressed"
+            aria-pressed="false"
+            aria-label="Raise hand"
+            title="Raise hand"
+          >
+            <svg class="icon" aria-hidden="true"><use href="/icons.svg#hand" /></svg>
+          </button>
+          <div class="reaction-wrap">
+            <button
+              type="button"
+              id="react-toggle"
+              class="icon-btn control"
+              aria-expanded="false"
+              aria-controls="reactions"
+              aria-label="Send a reaction"
+              title="Send a reaction"
+            >
+              <svg class="icon" aria-hidden="true"><use href="/icons.svg#smile" /></svg>
+            </button>
+            <div id="reactions" class="reactions" role="group" aria-label="Reactions" hidden>
+              <button type="button" data-emoji="👍" aria-label="Send thumbs up">👍</button>
+              <button type="button" data-emoji="👏" aria-label="Send clapping">👏</button>
+              <button type="button" data-emoji="❤️" aria-label="Send a heart">❤️</button>
+              <button type="button" data-emoji="😂" aria-label="Send laughing">😂</button>
+              <button type="button" data-emoji="🎉" aria-label="Send celebration">🎉</button>
+              <button type="button" data-emoji="👀" aria-label="Send eyes">👀</button>
+            </div>
+          </div>
+          <button
+            type="button"
+            id="toggle-people"
+            class="icon-btn control accent-when-pressed"
+            aria-pressed="false"
+            aria-controls="side"
+            aria-label="Show people"
+            title="Show people"
+          >
+            <svg class="icon" aria-hidden="true"><use href="/icons.svg#users" /></svg>
+            <span id="count-badge" class="badge" aria-hidden="true"></span>
+          </button>
+        </div>
+        <button type="button" id="leave" class="btn btn-danger leave" title="Leave the room">
+          <svg class="icon" aria-hidden="true"><use href="/icons.svg#phone-off" /></svg>
+          <span class="leave-text">Leave</span>
+        </button>
+      </footer>
+      <div id="audio-sink" hidden></div>
+    </main>
+    <script type="module" src="/home.js"></script>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
