@@ -7,7 +7,7 @@ export interface CreateRoomParams {
   roomId: string;
   videoCodec: VideoCodec;
   record: boolean;
-  /** Absolute directory the worker writes raw track files into. */
+  /** Absolute directory the worker writes per-track copy-out files into. Egress composites them into one room file. */
   recordDir: string;
 }
 

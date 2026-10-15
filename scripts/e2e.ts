@@ -187,7 +187,10 @@ try {
   const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
   console.log(`manifest: ${manifest.files.length} file(s), errors: ${JSON.stringify(manifest.errors)}`);
   if (manifest.status !== 'ready') fail(`manifest status ${manifest.status}`);
-  if (manifest.files.length !== PEERS) fail(`expected ${PEERS} recorded files, got ${manifest.files.length}`);
+  if (manifest.files.length !== 1) fail(`expected 1 room recording, got ${manifest.files.length}`);
+  if (!/^room\.(mp4|webm)$/.test(manifest.files[0].name)) {
+    fail(`expected room.mp4 or room.webm, got ${manifest.files[0].name}`);
+  }
   if (manifest.errors.length > 0) fail('finalize reported errors');
 
   const ffprobe = spawnSync('ffprobe', ['-version']);
@@ -203,6 +206,8 @@ try {
       ]);
       detail = probe.stdout.toString().trim().replace(/\n/g, ' ');
       if (probe.status !== 0) fail(`ffprobe could not read ${f.name}: ${probe.stderr}`);
+      if (!/vp[89]/.test(detail)) fail(`room file has no VP8/VP9 video: ${detail}`);
+      if (!/aac|opus/.test(detail)) fail(`room file has no mixed audio: ${detail}`);
     }
     console.log(`  ${f.name}: ${(f.bytes / 1024).toFixed(0)} KiB ${detail}`);
   }

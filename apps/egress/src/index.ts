@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Purpose: recording lifecycle after a room ends: finalize to MP4/WebM, then upload and delete.
+// Purpose: recording lifecycle after a room ends: one mixed room file, then upload and delete.
 export { loadEgressConfig, type EgressConfig, type S3Config } from './config.ts';
 export { freeBytes } from './disk.ts';
 export {

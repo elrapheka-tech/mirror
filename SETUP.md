@@ -108,7 +108,7 @@ Joins are refused when the projected outbound rate would pass `CAPACITY_MBPS`. T
 | `CLEANUP_WATERMARK_GB` | `30` | Below this free space, upload runs immediately |
 | `CLEANUP_TIME` | `02:00` | Daily local time for the upload run, `HH:MM` |
 | `CLEANUP_MAX_MBPS` | `200` | Upload cap. The live call rate is subtracted from `CAPACITY_MBPS` first |
-| `FFMPEG_PATH` | `ffmpeg` | Used to remux IVF and Ogg into MP4 or WebM |
+| `FFMPEG_PATH` | `ffmpeg` | Composites the room's raw tracks into one MP4 or WebM: a camera grid and mixed audio |
 | `S3_ENDPOINT` | empty | Set for MinIO, R2, or any non-AWS endpoint |
 | `S3_REGION` | `us-east-1` | |
 | `S3_BUCKET` | empty | Upload stays off until this is set |
